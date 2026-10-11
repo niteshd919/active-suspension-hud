@@ -1,0 +1,173 @@
+@import 'tailwindcss';
+@import '@fontsource/b612/400.css';
+@import '@fontsource/b612/700.css';
+
+@theme {
+  /* Defaults for the standard palette; theme/palette.ts overrides these at runtime (keep in sync). */
+  --color-hud-cyan: #22e5ff;
+  --color-hud-green: #3dff8f;
+  --color-hud-amber: #ffb020;
+  --color-hud-red: #ff3b30;
+
+  /* B612 was designed by Airbus and ENAC for cockpit displays: distinct letterforms and unambiguous digits. */
+  --font-hud: 'B612', ui-sans-serif, system-ui, sans-serif;
+  /* B612's digits are tabular by default, so live numbers never jitter, and its decimal point stays narrow. */
+  --font-num: 'B612', ui-sans-serif, system-ui, sans-serif;
+
+  --animate-hud-blink: hud-blink 1.2s ease-in-out infinite;
+  --animate-gate-nudge: gate-nudge 1.6s ease-in-out infinite;
+
+  @keyframes gate-nudge {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(8px);
+    }
+  }
+
+  @keyframes hud-blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.4;
+    }
+  }
+}
+
+/* Pitch black everywhere: on a HUD combiner, black is optically transparent. */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: #000;
+  color-scheme: dark;
+}
+
+body {
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ───────────── focus: a white ring with a black gap, visible on any background (WCAG 2.4.7 / 1.4.11) ───────────── */
+:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #000;
+}
+
+/* ───────────── HUD text ───────────── */
+
+/* Legibility over busy 3D content: a tight dark halo behind every glyph, so contrast never depends on what is behind it. */
+.hud-root {
+  text-shadow:
+    0 0 2px #000,
+    0 0 5px #000,
+    0 0 10px rgb(0 0 0 / 0.85);
+}
+.hud-root svg text {
+  paint-order: stroke;
+  stroke: #000;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+@utility glow {
+  text-shadow:
+    0 0 2px #000,
+    0 0 5px #000,
+    0 0 16px color-mix(in srgb, currentColor 55%, transparent);
+}
+
+@utility hud-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  /* 0.92 keeps even the red palette colour above 4.5:1 on black (0.85 measured 4.43:1). */
+  opacity: 0.92;
+}
+
+@utility hud-num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+/* ───────────── dev panel controls ───────────── */
+
+.dev-range {
+  appearance: none;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+}
+.dev-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: #52525b;
+}
+.dev-range::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: #52525b;
+}
+.dev-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  margin-top: -9px;
+  border-radius: 50%;
+  border: 3px solid #09090b;
+  background: #67e8f9;
+}
+.dev-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid #09090b;
+  background: #67e8f9;
+}
+
+/* ───────────── user preferences (set on <html> by A11yEffects) ───────────── */
+
+/* Reduced motion: no looping or decorative animation. State changes still happen, just without movement. */
+[data-motion='reduced'] *,
+[data-motion='reduced'] *::before,
+[data-motion='reduced'] *::after {
+  animation: none !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* High contrast: opaque plates behind every HUD element, full-strength labels, no soft glow. */
+[data-contrast='high'] .hud-label {
+  opacity: 1;
+}
+[data-contrast='high'] .glow {
+  text-shadow:
+    0 0 3px #000,
+    0 0 6px #000;
+}
+[data-contrast='high'] .hud-zone > * {
+  background: rgb(0 0 0 / 0.9);
+  outline: 2px solid color-mix(in srgb, currentColor 75%, transparent);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+}
+
+@media (forced-colors: active) {
+  .hud-root {
+    forced-color-adjust: auto;
+    text-shadow: none;
+  }
+  :focus-visible {
+    outline-color: Highlight;
+    box-shadow: none;
+  }
+}
