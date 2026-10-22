@@ -16,6 +16,14 @@
 
   --animate-hud-blink: hud-blink 1.2s ease-in-out infinite;
   --animate-gate-nudge: gate-nudge 1.6s ease-in-out infinite;
+  --animate-guide-in: guide-in 0.22s ease-out;
+
+  @keyframes guide-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+    }
+  }
 
   @keyframes gate-nudge {
     0%,

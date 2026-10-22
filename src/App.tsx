@@ -5,18 +5,20 @@ import { LiveRegion } from './a11y/LiveRegion'
 import { useReducedMotion } from './a11y/preferences'
 import { useSettingsStore } from './a11y/useSettingsStore'
 import { DevControlPanel } from './dev/DevControlPanel'
+import { GuideModal } from './dev/GuideModal'
 import { HUDOverlay } from './hud/HUDOverlay'
 import { HUDScene } from './scene/HUDScene'
 import { useTelemetryStore, type CameraView } from './store/useTelemetryStore'
 
 const CAMERA_VIEWS: CameraView[] = ['auto', 'side', 'front', 'rear', 'top', 'suspension']
 
-/** Single-character shortcuts. They can be switched off (WCAG 2.1.4) and never fire while typing. */
+/** Single-character shortcuts. They can be switched off (WCAG 2.1.4) and never fire while typing or behind a modal. */
 function useKeyboardShortcuts() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return
       if (!useSettingsStore.getState().shortcuts) return
+      if (document.querySelector('dialog[open]')) return
       if ((e.target as HTMLElement | null)?.closest('input[type="text"], input[type="number"], textarea, select, [contenteditable="true"]')) return
       const s = useTelemetryStore.getState()
       switch (e.key.toLowerCase()) {
@@ -57,6 +59,7 @@ export default function App() {
           <HUDOverlay />
         </main>
         <DevControlPanel />
+        <GuideModal />
       </div>
       <LiveRegion />
     </MotionConfig>
