@@ -82,7 +82,7 @@ export function GuideModal() {
               <h2 id="guide-title" className="text-lg font-bold">
                 How to use the simulation
               </h2>
-              <p className="text-sm text-zinc-400">Land Rover Defender 110 · predictive air-suspension head-up display</p>
+              <p className="text-sm text-zinc-400">Land Rover Defender 110 · predictive air-suspension IVI</p>
             </div>
           </div>
           <button

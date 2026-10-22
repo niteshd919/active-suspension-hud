@@ -23,7 +23,7 @@ export function HUDOverlay() {
   return (
     <div
       role="region"
-      aria-label="Head-up display instruments"
+      aria-label="In-vehicle infotainment instruments"
       className="hud-root pointer-events-none absolute inset-0 font-hud text-hud-cyan select-none"
     >
       {/* Black emits nothing on a combiner: these fades carve clear zones so the instruments never sit on bright content. */}

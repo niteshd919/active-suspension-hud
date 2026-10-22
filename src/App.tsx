@@ -54,7 +54,7 @@ export default function App() {
     <MotionConfig reducedMotion={reducedMotion ? 'always' : 'never'}>
       <A11yEffects />
       <div className="relative h-screen w-screen overflow-hidden bg-black">
-        <main aria-label="Active suspension head-up display" className="absolute inset-0">
+        <main aria-label="Active suspension in-vehicle infotainment display" className="absolute inset-0">
           <HUDScene />
           <HUDOverlay />
         </main>
